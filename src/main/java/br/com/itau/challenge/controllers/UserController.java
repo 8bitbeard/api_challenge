@@ -31,6 +31,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(listUsersDTO);
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserResponseDTO createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
+        User userData = userMapper.toEntity(userRequestDTO);
+        User newUser = userService.create(userData);
+
+        return userMapper.toDto(newUser);
+    }
+
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO sessionUser() {
@@ -39,14 +48,5 @@ public class UserController {
         User user = userService.find(email);
 
         return userMapper.toDto(user);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDTO createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
-        User userData = userMapper.toEntity(userRequestDTO);
-        User newUser = userService.create(userData);
-
-        return userMapper.toDto(newUser);
     }
 }

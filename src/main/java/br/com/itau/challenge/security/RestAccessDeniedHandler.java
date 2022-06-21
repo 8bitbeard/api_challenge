@@ -22,7 +22,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
         Error error = new Error();
         error.setStatus(status.value());
-        error.setMessage("FORBIDDEN");
+        error.setMessage(status.getReasonPhrase());
 
         httpServletResponse.setContentType("application/json");
         OutputStream out = httpServletResponse.getOutputStream();

@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -25,7 +22,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         Error error = new Error();
         error.setStatus(status.value());
-        error.setMessage("UNAUTHORIZED");
+        error.setMessage(status.getReasonPhrase());
 
         httpServletResponse.setContentType("application/json");
         OutputStream out = httpServletResponse.getOutputStream();
