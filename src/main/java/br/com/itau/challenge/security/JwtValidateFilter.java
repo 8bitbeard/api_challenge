@@ -27,7 +27,7 @@ public class JwtValidateFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String attribute = request.getHeader(AUTHORIZATION_HEADER);
 
-        if(attribute == null || attribute.startsWith(BEARER_PREFIX)) {
+        if(attribute == null || !attribute.startsWith(BEARER_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }

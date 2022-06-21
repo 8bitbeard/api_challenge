@@ -7,9 +7,13 @@ import br.com.itau.challenge.mappers.UserMapper;
 import br.com.itau.challenge.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -18,6 +22,25 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> listUsers() {
+        List<User> users = userService.list();
+        List<UserResponseDTO> listUsersDTO = userMapper.toCollectionDto(users);
+
+        return ResponseEntity.status(HttpStatus.OK).body(listUsersDTO);
+    }
+
+    @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponseDTO sessionUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        System.out.println(email);
+        User user = userService.find(email);
+
+        return userMapper.toDto(user);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
