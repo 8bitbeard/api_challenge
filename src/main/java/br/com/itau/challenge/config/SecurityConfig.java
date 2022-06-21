@@ -2,6 +2,8 @@ package br.com.itau.challenge.config;
 
 import br.com.itau.challenge.security.JwtAuthenticateFilter;
 import br.com.itau.challenge.security.JwtValidateFilter;
+import br.com.itau.challenge.security.RestAccessDeniedHandler;
+import br.com.itau.challenge.security.RestAuthenticationEntryPoint;
 import br.com.itau.challenge.services.UserDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
@@ -21,6 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/login").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/users").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
+        http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint);
         http.addFilter(jwtAuthenticateFilter);
         http.addFilter(new JwtValidateFilter(authenticationManagerBean()));
     }

@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @AllArgsConstructor
 public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter {
@@ -52,7 +54,11 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET_KEY));
 
-        response.getWriter().write(token);
-        response.getWriter().flush();
+        Map<String, String> tokenResponse = new HashMap<>();
+        tokenResponse.put("access_token", token);
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(response.getOutputStream(), tokenResponse);
+//        response.getWriter().write(token);
+//        response.getWriter().flush();
     }
 }

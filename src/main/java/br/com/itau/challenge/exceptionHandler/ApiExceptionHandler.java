@@ -4,6 +4,7 @@ import br.com.itau.challenge.exceptions.UserAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Object> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        Error error = new Error();
+        error.setStatus(status.value());
+        error.setTime(OffsetDateTime.now());
+        error.setMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
 
         Error error = new Error();
