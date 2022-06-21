@@ -1,6 +1,8 @@
 package br.com.itau.challenge.exceptionHandler;
 
 import br.com.itau.challenge.exceptions.UserAlreadyExistsException;
+import br.com.itau.challenge.exceptions.UserAlreadyHaveCardException;
+import br.com.itau.challenge.exceptions.UserDoesNotHaveCardException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -63,6 +65,30 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
+
+        Error error = new Error();
+        error.setStatus(status.value());
+        error.setTime(OffsetDateTime.now());
+        error.setMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(UserAlreadyHaveCardException.class)
+    public ResponseEntity<Object> handleUserAlreadyHaveCard(UserAlreadyHaveCardException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        Error error = new Error();
+        error.setStatus(status.value());
+        error.setTime(OffsetDateTime.now());
+        error.setMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(UserDoesNotHaveCardException.class)
+    public ResponseEntity<Object> handleDoesNotHaveCardException(UserDoesNotHaveCardException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         Error error = new Error();
         error.setStatus(status.value());

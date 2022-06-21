@@ -36,7 +36,6 @@ public class UserController {
     public UserResponseDTO sessionUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        System.out.println(email);
         User user = userService.find(email);
 
         return userMapper.toDto(user);
