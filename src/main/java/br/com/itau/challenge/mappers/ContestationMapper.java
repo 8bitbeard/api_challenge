@@ -17,12 +17,6 @@ public class ContestationMapper {
     private final ModelMapper modelMapper;
 
     public ContestationResponseDTO toDto(Contestation contestation) {
-        TypeMap<Contestation, ContestationResponseDTO> propertyMapper = modelMapper.createTypeMap(Contestation.class, ContestationResponseDTO.class);
-        propertyMapper.addMapping(src -> src.getPurchase().getValue(), ContestationResponseDTO::setValue);
-        propertyMapper.addMapping(src -> src.getPurchase().getStoreName(), ContestationResponseDTO::setStoreName);
-        propertyMapper.addMapping(src -> src.getPurchase().getCreateDate(), ContestationResponseDTO::setPurchaseDate);
-        propertyMapper.addMapping(src -> src.getPurchase().getPurchaseType(), ContestationResponseDTO::setPurchaseType);
-
         return modelMapper.map(contestation, ContestationResponseDTO.class);
     }
 

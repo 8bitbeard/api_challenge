@@ -1,0 +1,26 @@
+spring:
+  application: itau-challenge
+  datasource:
+    url: jdbc:postgresql://localhost:5432/service_challenge_db
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+        show-sql: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+        jdbc:
+            lob:
+              non_contextual_creation: true
+
+itauchallenge:
+  api-docs:
+    apiName: Itau Challenge API
+    description: API Developed for the Itau Backend Challenge
+    version: '@project.version@'
+    contact:
+      name: Wilton Souza
+      url: https://github.com/8bitbeard
+      email: willsouzafilho@gmail.com

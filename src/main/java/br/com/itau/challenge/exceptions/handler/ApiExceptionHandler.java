@@ -4,15 +4,15 @@ import br.com.itau.challenge.exceptions.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@ControllerAdvice
+@RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
@@ -35,7 +35,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             String message = messageSource.getMessage(error, LocaleContextHolder.getLocale());
 
             fields.add(new Error.Field(name, message));
-
         }
 
         Error error = new Error();
@@ -48,7 +47,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<Object> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> handleUserAlreadyExists(RuntimeException ex, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
 
         Error error = new Error();
@@ -59,9 +59,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
-        HttpStatus status = HttpStatus.CONFLICT;
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Object> handleUserNotFound(RuntimeException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         Error error = new Error();
         error.setStatus(status.value());
@@ -72,6 +73,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyHaveCardException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> handleUserAlreadyHaveCard(UserAlreadyHaveCardException ex, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
 
@@ -84,6 +86,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserDoesNotHaveCardException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleDoesNotHaveCardException(UserDoesNotHaveCardException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
@@ -96,6 +99,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PurchaseNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handlePurchaseNotFound(PurchaseNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
@@ -108,6 +112,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ContestationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleContestationNotFound(ContestationNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
@@ -120,6 +125,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Object> handleForbidden(ForbiddenException ex, WebRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
 

@@ -5,6 +5,7 @@ import br.com.itau.challenge.dtos.response.ContestationResponseDTO;
 import br.com.itau.challenge.entities.Contestation;
 import br.com.itau.challenge.mappers.ContestationMapper;
 import br.com.itau.challenge.services.ContestationService;
+import br.com.itau.challenge.swagger.ContestationApi;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/contestations")
-public class ContestationController {
+public class ContestationController implements ContestationApi {
 
     private final ContestationService contestationService;
     private final ContestationMapper contestationMapper;

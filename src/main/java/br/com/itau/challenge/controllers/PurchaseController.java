@@ -6,6 +6,7 @@ import br.com.itau.challenge.entities.Purchase;
 import br.com.itau.challenge.mappers.ContestationMapper;
 import br.com.itau.challenge.mappers.PurchaseMapper;
 import br.com.itau.challenge.services.PurchaseService;
+import br.com.itau.challenge.swagger.PurchaseApi;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/purchases")
-public class PurchaseController {
+public class PurchaseController implements PurchaseApi {
 
     private final PurchaseService purchaseService;
     private final PurchaseMapper purchaseMapper;
@@ -33,6 +34,7 @@ public class PurchaseController {
     }
 
     @GetMapping("/{purchaseId}")
+    @ResponseStatus(HttpStatus.OK)
     public PurchaseResponseDTO getPurchase(@PathVariable UUID purchaseId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Purchase purchase = purchaseService.findById(userEmail, purchaseId);

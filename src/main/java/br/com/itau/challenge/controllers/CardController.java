@@ -12,6 +12,7 @@ import br.com.itau.challenge.mappers.PurchaseMapper;
 import br.com.itau.challenge.services.CardService;
 import br.com.itau.challenge.services.ContestationService;
 import br.com.itau.challenge.services.PurchaseService;
+import br.com.itau.challenge.swagger.CardsApi;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/cards")
-public class CardController {
+public class CardController implements CardsApi {
 
     private final CardService cardService;
     private final PurchaseService purchaseService;
