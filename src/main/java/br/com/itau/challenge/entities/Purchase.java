@@ -26,12 +26,15 @@ public class Purchase implements Serializable {
     @Column(nullable = false)
     private String storeName;
 
-    @OneToOne
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PurchaseType purchaseType;
+
+    @Column(nullable = false)
+    private boolean isContested;
+
+    @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
 }

@@ -1,7 +1,7 @@
 package br.com.itau.challenge.mappers;
 
-import br.com.itau.challenge.dtos.UserRequestDTO;
-import br.com.itau.challenge.dtos.UserResponseDTO;
+import br.com.itau.challenge.dtos.request.UserRequestDTO;
+import br.com.itau.challenge.dtos.response.UserResponseDTO;
 import br.com.itau.challenge.entities.User;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

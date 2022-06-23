@@ -1,9 +1,13 @@
 package br.com.itau.challenge.controllers;
 
-import br.com.itau.challenge.dtos.UserRequestDTO;
-import br.com.itau.challenge.dtos.UserResponseDTO;
+import br.com.itau.challenge.dtos.response.CardResponseDTO;
+import br.com.itau.challenge.dtos.request.UserRequestDTO;
+import br.com.itau.challenge.dtos.response.UserResponseDTO;
+import br.com.itau.challenge.entities.Card;
 import br.com.itau.challenge.entities.User;
+import br.com.itau.challenge.mappers.CardMapper;
 import br.com.itau.challenge.mappers.UserMapper;
+import br.com.itau.challenge.services.CardService;
 import br.com.itau.challenge.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -21,7 +26,9 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final CardService cardService;
     private final UserMapper userMapper;
+    private final CardMapper cardMapper;
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> listUsers() {
@@ -48,5 +55,12 @@ public class UserController {
         User user = userService.find(email);
 
         return userMapper.toDto(user);
+    }
+
+    @GetMapping("/{userId}/cards")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CardResponseDTO> listCards(@PathVariable UUID userId) {
+        List<Card> cards = cardService.listByUserId(userId);
+        return cardMapper.toCollectionDto(cards);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.itau.challenge.security;
 
-import br.com.itau.challenge.exceptionHandler.Error;
+import br.com.itau.challenge.exceptions.handler.Error;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;

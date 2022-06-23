@@ -1,6 +1,6 @@
 package br.com.itau.challenge.mappers;
 
-import br.com.itau.challenge.dtos.PurchaseResponseDTO;
+import br.com.itau.challenge.dtos.response.PurchaseResponseDTO;
 import br.com.itau.challenge.entities.Purchase;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

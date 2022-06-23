@@ -1,8 +1,6 @@
-package br.com.itau.challenge.exceptionHandler;
+package br.com.itau.challenge.exceptions.handler;
 
-import br.com.itau.challenge.exceptions.UserAlreadyExistsException;
-import br.com.itau.challenge.exceptions.UserAlreadyHaveCardException;
-import br.com.itau.challenge.exceptions.UserDoesNotHaveCardException;
+import br.com.itau.challenge.exceptions.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -10,7 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -89,6 +86,42 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserDoesNotHaveCardException.class)
     public ResponseEntity<Object> handleDoesNotHaveCardException(UserDoesNotHaveCardException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+
+        Error error = new Error();
+        error.setStatus(status.value());
+        error.setTime(OffsetDateTime.now());
+        error.setMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(PurchaseNotFoundException.class)
+    public ResponseEntity<Object> handlePurchaseNotFound(PurchaseNotFoundException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        Error error = new Error();
+        error.setStatus(status.value());
+        error.setTime(OffsetDateTime.now());
+        error.setMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ContestationNotFoundException.class)
+    public ResponseEntity<Object> handleContestationNotFound(ContestationNotFoundException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        Error error = new Error();
+        error.setStatus(status.value());
+        error.setTime(OffsetDateTime.now());
+        error.setMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleForbidden(ForbiddenException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
 
         Error error = new Error();
         error.setStatus(status.value());

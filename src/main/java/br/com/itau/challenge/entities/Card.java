@@ -1,10 +1,13 @@
 package br.com.itau.challenge.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -17,9 +20,13 @@ public class Card implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany
+    @JoinColumn(name = "card_id")
+    private List<Purchase> purchases;
 
     @Column(nullable = false, unique = true)
     private String number;

@@ -1,4 +1,4 @@
-package br.com.itau.challenge.exceptionHandler;
+package br.com.itau.challenge.exceptions.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,6 @@
-package br.com.itau.challenge.dtos;
+package br.com.itau.challenge.dtos.request;
 
+import br.com.itau.challenge.entities.PurchaseType;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -20,4 +21,7 @@ public class PurchaseRequestDTO {
     @NotBlank
     @Size(max = 20)
     private String storeName;
+
+    @NotNull
+    private PurchaseType purchaseType;
 }

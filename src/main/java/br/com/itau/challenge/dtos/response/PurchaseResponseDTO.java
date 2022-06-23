@@ -1,5 +1,6 @@
-package br.com.itau.challenge.dtos;
+package br.com.itau.challenge.dtos.response;
 
+import br.com.itau.challenge.entities.PurchaseType;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -12,4 +13,5 @@ public class PurchaseResponseDTO {
     private BigDecimal value;
     private OffsetDateTime createDate;
     private String storeName;
+    private PurchaseType purchaseType;
 }

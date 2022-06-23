@@ -1,4 +1,4 @@
-package br.com.itau.challenge.dtos;
+package br.com.itau.challenge.dtos.response;
 
 import lombok.Data;
 
