@@ -1,7 +1,7 @@
 spring:
   application: itau-challenge
   datasource:
-    url: jdbc:postgresql://localhost:5432/service_challenge_db
+    url: jdbc:postgresql://compose_db:5432/service_challenge_db
     username: postgres
     password: postgres
   jpa:
@@ -9,7 +9,6 @@ spring:
       hibernate:
         ddl-auto: update
         show-sql: true
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
         format_sql: true
         jdbc:
             lob:

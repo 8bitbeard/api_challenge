@@ -31,7 +31,7 @@ public class ContestationService {
     @Transactional
     public Contestation create(String userEmail, ContestationRequestDTO contestationRequestDTO) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(() -> new UserNotFoundException());
         Card card = cardRepository.findByUserIdAndId(user.getId(), contestationRequestDTO.getCardId())
                 .orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui o cartão informado!"));
         Purchase purchase = purchaseRepository.findByCardIdAndId(card.getId(), contestationRequestDTO.getPurchaseId())
@@ -50,7 +50,7 @@ public class ContestationService {
 
     public Contestation findById(String userEmail, UUID contestationId) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(() -> new UserNotFoundException());
         Contestation contestation = contestationRepository.findById(contestationId)
                 .orElseThrow(() -> new ContestationNotFoundException("O usuário logado não possui nenhuma contestação com o id informado!"));
 
@@ -63,7 +63,7 @@ public class ContestationService {
 
     public List<Contestation> findByCardId(String userEmail, UUID cardId) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(() -> new UserNotFoundException());
         Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId)
                 .orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui nenhum cartão com o id informado!"));;
 

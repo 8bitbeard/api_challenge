@@ -31,7 +31,7 @@ public class PurchaseService {
 
     @Transactional
     public Purchase create(String userEmail, PurchaseRequestDTO purchaseRequestDTO) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
         Card card = cardRepository.findById(purchaseRequestDTO.getCardId()).orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui o cartão informado!"));
 
         Purchase purchaseData = new Purchase();
@@ -45,7 +45,7 @@ public class PurchaseService {
     }
 
     public Purchase findById(String userEmail, UUID purchaseId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
         Purchase purchase = purchaseRepository.findById(purchaseId)
                 .orElseThrow(() -> new PurchaseNotFoundException("Nenhuma compra com o id informado foi encontrada!"));
 
@@ -57,7 +57,7 @@ public class PurchaseService {
     }
 
     public List<Purchase> findByCardId(String userEmail, UUID cardId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
         Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId).orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui nenhum cartão com o id informado!"));;
 
         return purchaseRepository.findByCardId(userCard.getId());

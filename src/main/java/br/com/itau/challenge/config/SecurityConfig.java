@@ -2,30 +2,40 @@ package br.com.itau.challenge.config;
 
 import br.com.itau.challenge.security.JwtAuthenticateFilter;
 import br.com.itau.challenge.security.JwtValidateFilter;
-import br.com.itau.challenge.security.RestAccessDeniedHandler;
 import br.com.itau.challenge.security.RestAuthenticationEntryPoint;
-import br.com.itau.challenge.services.UserDetailService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @AllArgsConstructor
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailService userDetailService;
+    private final UserDetailsService userDetailService;
     private final PasswordEncoder passwordEncoder;
-    private final RestAccessDeniedHandler restAccessDeniedHandler;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    @Override
+    @Bean
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

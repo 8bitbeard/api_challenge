@@ -24,7 +24,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     public Card create(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
 
         OffsetDateTime nowTime = OffsetDateTime.now();
         Card newCard = new Card();
@@ -38,7 +38,7 @@ public class CardService {
     }
 
     public Card findById(String userEmail, UUID cardId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
         Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId).orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui nenhum cartão com o id informado!"));;
 
         return userCard;
