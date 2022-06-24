@@ -1,6 +1,6 @@
 package br.com.itau.challenge.security;
 
-import br.com.itau.challenge.exceptions.handler.Error;
+import br.com.itau.challenge.dtos.response.ErrorResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,8 +20,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
         HttpStatus status = HttpStatus.FORBIDDEN;
 
-        Error error = new Error();
-        error.setStatus(status.value());
+        ErrorResponseDTO error = new ErrorResponseDTO();
         error.setMessage(status.getReasonPhrase());
 
         httpServletResponse.setContentType("application/json");
