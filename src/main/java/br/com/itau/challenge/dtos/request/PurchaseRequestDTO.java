@@ -1,6 +1,7 @@
 package br.com.itau.challenge.dtos.request;
 
 import br.com.itau.challenge.entities.PurchaseType;
+import br.com.itau.challenge.validators.PurchaseTypeSubset;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -23,5 +24,6 @@ public class PurchaseRequestDTO {
     private String storeName;
 
     @NotNull
+    @PurchaseTypeSubset(anyOf = {PurchaseType.ONLINE, PurchaseType.STORE})
     private PurchaseType purchaseType;
 }

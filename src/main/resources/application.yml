@@ -5,9 +5,11 @@ spring:
     username: postgres
     password: postgres
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
-        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
         show-sql: true
         format_sql: true
         jdbc:
