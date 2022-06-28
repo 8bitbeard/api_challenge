@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/cards")
+@RequestMapping("/v1/cards")
 public class CardController implements CardsApi {
 
     private final CardService cardService;
@@ -33,7 +33,7 @@ public class CardController implements CardsApi {
     private final PurchaseMapper purchaseMapper;
     private final ContestationMapper contestationMapper;
 
-    @PostMapping("/generate")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public CardResponseDTO create() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

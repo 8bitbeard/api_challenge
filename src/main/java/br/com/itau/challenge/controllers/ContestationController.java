@@ -8,6 +8,7 @@ import br.com.itau.challenge.services.ContestationService;
 import br.com.itau.challenge.swagger.ContestationApi;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +17,23 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/contestations")
+@RequestMapping("/v1/contestations")
 public class ContestationController implements ContestationApi {
 
     private final ContestationService contestationService;
     private final ContestationMapper contestationMapper;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ContestationResponseDTO createContestation(@RequestBody @Valid ContestationRequestDTO contestationRequestDTO) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Contestation newContestation = contestationService.create(userEmail, contestationRequestDTO);
+        ContestationResponseDTO newContestationDTO = contestationMapper.toDto(newContestation);
 
-        return contestationMapper.toDto(newContestation);
+        kafkaTemplate.send("contestation-1", newContestationDTO);
+
+        return newContestationDTO;
     }
 
     @GetMapping("/{contestationId}")

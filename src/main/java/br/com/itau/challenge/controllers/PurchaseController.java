@@ -3,7 +3,6 @@ package br.com.itau.challenge.controllers;
 import br.com.itau.challenge.dtos.request.PurchaseRequestDTO;
 import br.com.itau.challenge.dtos.response.PurchaseResponseDTO;
 import br.com.itau.challenge.entities.Purchase;
-import br.com.itau.challenge.mappers.ContestationMapper;
 import br.com.itau.challenge.mappers.PurchaseMapper;
 import br.com.itau.challenge.services.PurchaseService;
 import br.com.itau.challenge.swagger.PurchaseApi;
@@ -17,12 +16,11 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/purchases")
+@RequestMapping("/v1/purchases")
 public class PurchaseController implements PurchaseApi {
 
     private final PurchaseService purchaseService;
     private final PurchaseMapper purchaseMapper;
-    private final ContestationMapper contestationMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

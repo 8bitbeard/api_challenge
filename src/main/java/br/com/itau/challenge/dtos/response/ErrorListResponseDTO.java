@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorListResponseDTO {
+    private String status;
     private String message;
-    private OffsetDateTime time;
     private List<Field> fields;
 
     @AllArgsConstructor

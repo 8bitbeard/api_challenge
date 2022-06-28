@@ -1,12 +1,11 @@
 package br.com.itau.challenge.config;
 
+import br.com.itau.challenge.security.CustomAccessDeniedHandler;
+import br.com.itau.challenge.security.CustomAuthenticationEntryPoint;
 import br.com.itau.challenge.security.JwtAuthenticateFilter;
 import br.com.itau.challenge.security.JwtValidateFilter;
-import br.com.itau.challenge.security.RestAuthenticationEntryPoint;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,12 +30,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailService;
     private final PasswordEncoder passwordEncoder;
-    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Override
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 
     @Override
@@ -45,31 +55,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticateFilter jwtAuthenticateFilter = new JwtAuthenticateFilter(authenticationManagerBean());
-        jwtAuthenticateFilter.setFilterProcessesUrl("/api/auth/login");
+        jwtAuthenticateFilter.setFilterProcessesUrl("/v1/auth/login");
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-                .antMatchers("/api/users").permitAll()
+                .antMatchers("/v1/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/v1/login").permitAll()
+                .antMatchers("/v1/users").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler())
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilter(jwtAuthenticateFilter).addFilter(new JwtValidateFilter(authenticationManagerBean()));
-
-
-
-
-//        http.csrf().disable();
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/login").permitAll();
-//        http.authorizeRequests().antMatchers("/api/users").permitAll();
-//        http.authorizeRequests().anyRequest().authenticated();
-//        http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint);
-//        http.addFilter(jwtAuthenticateFilter);
-//        http.addFilter(new JwtValidateFilter(authenticationManagerBean()));
     }
 
     @Override

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolationException;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -48,7 +47,7 @@ public class ApiExceptionHandler {
         }
 
         ErrorListResponseDTO error = new ErrorListResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
         error.setMessage(message("MethodArgumentNotValidException.message"));
         error.setFields(fields);
 
@@ -64,7 +63,7 @@ public class ApiExceptionHandler {
                 .collect(Collectors.toList());
 
         ErrorListResponseDTO error = new ErrorListResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
         error.setMessage(message("ConstraintViolationException.message"));
         error.setFields(fields);
 
@@ -75,7 +74,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ErrorResponseDTO handleContestationNotFound(ContestationNotFoundException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
         error.setMessage(message("ContestationNotFoundException.message"));
 
         return error;
@@ -85,7 +84,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ErrorResponseDTO handlePurchaseNotFound(PurchaseNotFoundException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
         error.setMessage(message("PurchaseNotFoundException.message"));
 
         return error;
@@ -95,7 +94,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public ErrorResponseDTO handleUserAlreadyExists(UserAlreadyExistsException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.CONFLICT.getReasonPhrase());
         error.setMessage(message("UserAlreadyExistsException.message"));
 
         return error;
@@ -105,7 +104,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleUserDoesNotHaveCard(UserDoesNotHaveCardException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
         error.setMessage(message("UserDoesNotHaveCardException.message"));
 
         return error;
@@ -115,8 +114,18 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public ErrorResponseDTO handleUserNotFound(UserNotFoundException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.CONFLICT.getReasonPhrase());
         error.setMessage(message("UserNotFoundException.message"));
+
+        return error;
+    }
+
+    @ExceptionHandler(PurchaseAlreadyContestedException.class)
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    public ErrorResponseDTO handlePurchaseAlreadyContestated(PurchaseAlreadyContestedException exception) {
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setStatus(HttpStatus.CONFLICT.getReasonPhrase());
+        error.setMessage(message("PurchaseAlreadyContestedException.message"));
 
         return error;
     }
@@ -125,9 +134,8 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
         if (exception.getCause() != null && exception.getCause() instanceof IllegalArgumentException) {
-            System.out.println(exception.getCause().getMessage());
             Matcher match_uuid = UUID_PATH_MSG.matcher(exception.getCause().getMessage());
             if (match_uuid.find()) {
                 error.setMessage(message("UuidInvalidValue.message"));
@@ -143,17 +151,17 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseDTO handleInternalServerError(Exception exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         error.setMessage(exception.getMessage());
 
         return error;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleJsonErrors(HttpMessageNotReadableException exception){
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setTime(OffsetDateTime.now());
+        error.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
 
 
         if (exception.getCause() != null && exception.getCause() instanceof InvalidFormatException) {
@@ -171,24 +179,6 @@ public class ApiExceptionHandler {
         error.setMessage(exception.getMessage());
         return error;
     }
-
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-//    public ErrorResponseDTO handleInvalidUuid(MethodArgumentTypeMismatchException exception){
-//        ErrorResponseDTO error = new ErrorResponseDTO();
-//        error.setTime(OffsetDateTime.now());
-//
-//        if (exception.getCause() != null && exception.getCause() instanceof InvalidFormatException) {
-//            Matcher match = ENUM_MSG.matcher(exception.getCause().getMessage());
-//            if (match.find()) {
-//                error.setMessage(message("UuidInvalidValue.message") + match.group(1));
-//                return error;
-//            }
-//        }
-//
-//        error.setMessage(exception.getMessage());
-//        return error;
-//    }
 
     private String message(String code, Object... params) {
         return messageSource.getMessage(code, params, LocaleContextHolder.getLocale());

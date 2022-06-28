@@ -13,6 +13,7 @@ import br.com.itau.challenge.repositories.ContestationRepository;
 import br.com.itau.challenge.repositories.PurchaseRepository;
 import br.com.itau.challenge.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class PurchaseService {
@@ -31,8 +33,8 @@ public class PurchaseService {
 
     @Transactional
     public Purchase create(String userEmail, PurchaseRequestDTO purchaseRequestDTO) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
-        Card card = cardRepository.findById(purchaseRequestDTO.getCardId()).orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui o cartão informado!"));
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        Card card = cardRepository.findById(purchaseRequestDTO.getCardId()).orElseThrow(UserDoesNotHaveCardException::new);
 
         Purchase purchaseData = new Purchase();
         purchaseData.setCreateDate(OffsetDateTime.now());
@@ -41,38 +43,31 @@ public class PurchaseService {
         purchaseData.setPurchaseType(purchaseRequestDTO.getPurchaseType());
         purchaseData.setCard(card);
 
+        log.info("Creating a new purchase for the user {}", user.getId());
+
         return purchaseRepository.save(purchaseData);
     }
 
     public Purchase findById(String userEmail, UUID purchaseId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         Purchase purchase = purchaseRepository.findById(purchaseId)
-                .orElseThrow(() -> new PurchaseNotFoundException("Nenhuma compra com o id informado foi encontrada!"));
+                .orElseThrow(PurchaseNotFoundException::new);
 
         if(purchase.getCard().getUser().getId() != user.getId()) {
-            new PurchaseNotFoundException("Nenhuma compra com o id informado foi encontrada!");
+            log.error("The user {} has no purchases with id {}", user.getId(), purchase.getId());
+            throw new PurchaseNotFoundException();
         }
 
+        log.info("Finding a purchase for user {} by id", user.getId());
         return purchase;
     }
 
     public List<Purchase> findByCardId(String userEmail, UUID cardId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
-        Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId).orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui nenhum cartão com o id informado!"));;
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId).orElseThrow(UserDoesNotHaveCardException::new);
+
+        log.info("Listing all purchases by cardId for user {}", user.getName());
 
         return purchaseRepository.findByCardId(userCard.getId());
-    }
-
-    @Transactional
-    public Contestation createContestation(UUID purchaseId) {
-        Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(() -> new PurchaseNotFoundException("There are no purchases with the given id!"));
-        purchase.setContested(true);
-        purchaseRepository.save(purchase);
-
-        Contestation newContestation = new Contestation();
-        newContestation.setPurchase(purchase);
-        newContestation.generateProtocolNumber();
-
-        return contestationRepository.save(newContestation);
     }
 }

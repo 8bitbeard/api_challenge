@@ -8,6 +8,7 @@ import br.com.itau.challenge.exceptions.UserNotFoundException;
 import br.com.itau.challenge.repositories.CardRepository;
 import br.com.itau.challenge.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class CardService {
@@ -24,7 +26,7 @@ public class CardService {
     private final CardRepository cardRepository;
 
     public Card create(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
         OffsetDateTime nowTime = OffsetDateTime.now();
         Card newCard = new Card();
@@ -34,17 +36,24 @@ public class CardService {
         newCard.setExpirationDate(nowTime.plus(5, ChronoUnit.YEARS));
         newCard.setUser(user);
 
+        log.info("Generating a new card with number {} for the user {}", newCard.getNumber(), user.getEmail());
+
         return cardRepository.save(newCard);
     }
 
     public Card findById(String userEmail, UUID cardId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
-        Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId).orElseThrow(() -> new UserDoesNotHaveCardException("O usuário logado não possui nenhum cartão com o id informado!"));;
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        Card userCard = cardRepository.findByUserIdAndId(user.getId(), cardId).orElseThrow(UserDoesNotHaveCardException::new);
+
+        log.info("Getting user {} card by id", user.getEmail());
 
         return userCard;
     }
 
     public List<Card> listByUserId(UUID userId) {
+
+        log.info("Listing all cards from user {} by id", userId);
+
         return cardRepository.findByUserId(userId);
     }
 }

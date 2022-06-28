@@ -35,18 +35,4 @@ public class User implements Serializable {
     @OneToMany
     @JoinColumn(name = "user_id")
     private List<Card> cards;
-
-    public Card addCard() {
-        OffsetDateTime nowTime = OffsetDateTime.now();
-        Card newCard = new Card();
-        newCard.generateCardCode();
-        newCard.generateCardNumber();
-        newCard.setCreateDate(nowTime);
-        newCard.setExpirationDate(nowTime.plus(5, ChronoUnit.YEARS));
-        newCard.setUser(this);
-
-        this.getCards().add(newCard);
-
-        return newCard;
-    }
 }

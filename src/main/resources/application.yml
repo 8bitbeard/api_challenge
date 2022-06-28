@@ -15,6 +15,21 @@ spring:
         jdbc:
             lob:
               non_contextual_creation: true
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      group-id: group-id
+
+topic:
+  name:
+    producer: topico.comando.teste
+
+auto:
+  create:
+    topics:
+      enable: true
 
 itauchallenge:
   api-docs:

@@ -9,6 +9,6 @@ import java.time.OffsetDateTime;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponseDTO implements Serializable {
+    private String status;
     private String message;
-    private OffsetDateTime time;
 }

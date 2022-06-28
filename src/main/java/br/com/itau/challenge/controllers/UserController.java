@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/v1/users")
 public class UserController implements UserApi {
 
     private final UserService userService;
