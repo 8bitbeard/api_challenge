@@ -1,7 +1,7 @@
 # Itau Challenge API
 
 Esta API foi desenvolvida em um desafio ténico para uma de desenvolvedor Backend.
-A documentação dessa API pode ser acessada localmente (Após subir o servidor local da aplicação) através da URL: http://localhost:8080/swagger-ui/index.html, mas também pode ser acessada através da URL de produção: http://15.228.243.48:8080/swagger-ui/index.html#/
+A documentação dessa API pode ser acessada localmente (Após subir o servidor local da aplicação) através da URL: http://localhost:8080/swagger-ui/index.html, mas também pode ser acessada (E completamente testada) através da URL de produção: http://15.228.243.48:8080/swagger-ui/index.html#/
 
 # Tecnologias utilizadas
 - Java
