@@ -47,15 +47,6 @@ public class UserController implements UserApi {
         return userMapper.toDto(newUser);
     }
 
-    @GetMapping("/me")
-    @ResponseStatus(HttpStatus.OK)
-    public UserResponseDTO sessionUser() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.find(userEmail);
-
-        return userMapper.toDto(user);
-    }
-
     @GetMapping("/{userId}/cards")
     @ResponseStatus(HttpStatus.OK)
     public CardsResponseDTO listCards(@PathVariable UUID userId) {

@@ -24,9 +24,6 @@ public interface UserApi {
     @SecurityRequirements(value = {})
     UserResponseDTO createUser(@RequestBody @Valid UserRequestDTO userRequestDTO);
 
-    @Operation(summary = "Show the information of the logged in user")
-    UserResponseDTO sessionUser();
-
     @Operation(summary = "List all the cards owned by a specific user")
     CardsResponseDTO listCards(@PathVariable UUID userId);
 
