@@ -6,6 +6,7 @@ A documentação dessa API pode ser acessada localmente (Após subir o servidor 
 # Tecnologias utilizadas
 - Java
 - Spring boot
+- Spring Security
 - PostgreSQL
 - Kafka
 - Docker
