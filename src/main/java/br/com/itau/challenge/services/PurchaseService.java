@@ -2,7 +2,6 @@ package br.com.itau.challenge.services;
 
 import br.com.itau.challenge.dtos.request.PurchaseRequestDTO;
 import br.com.itau.challenge.entities.Card;
-import br.com.itau.challenge.entities.Contestation;
 import br.com.itau.challenge.entities.Purchase;
 import br.com.itau.challenge.entities.User;
 import br.com.itau.challenge.exceptions.PurchaseNotFoundException;
@@ -29,7 +28,6 @@ public class PurchaseService {
     private final UserRepository userRepository;
     private final CardRepository cardRepository;
     private final PurchaseRepository purchaseRepository;
-    private final ContestationRepository contestationRepository;
 
     @Transactional
     public Purchase create(String userEmail, PurchaseRequestDTO purchaseRequestDTO) {

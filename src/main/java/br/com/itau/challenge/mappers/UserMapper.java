@@ -7,9 +7,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @Component
 public class UserMapper {
@@ -18,12 +15,6 @@ public class UserMapper {
 
     public User toEntity(UserRequestDTO userRequestDTO) {
         return modelMapper.map(userRequestDTO, User.class);
-    }
-
-    public List<UserResponseDTO> toCollectionDto(List<User> users) {
-        return users.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
     }
 
     public UserResponseDTO toDto(User user) {

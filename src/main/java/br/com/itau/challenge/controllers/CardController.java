@@ -1,11 +1,9 @@
 package br.com.itau.challenge.controllers;
 
 import br.com.itau.challenge.dtos.response.CardResponseDTO;
-import br.com.itau.challenge.dtos.response.ContestationResponseDTO;
-import br.com.itau.challenge.dtos.response.PurchaseResponseDTO;
+import br.com.itau.challenge.dtos.response.ContestationsResponseDTO;
+import br.com.itau.challenge.dtos.response.PurchasesResponseDTO;
 import br.com.itau.challenge.entities.Card;
-import br.com.itau.challenge.entities.Contestation;
-import br.com.itau.challenge.entities.Purchase;
 import br.com.itau.challenge.mappers.CardMapper;
 import br.com.itau.challenge.mappers.ContestationMapper;
 import br.com.itau.challenge.mappers.PurchaseMapper;
@@ -18,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -53,19 +50,21 @@ public class CardController implements CardsApi {
 
     @GetMapping("/{cardId}/purchases")
     @ResponseStatus(HttpStatus.OK)
-    public List<PurchaseResponseDTO> listPurchases(@PathVariable UUID cardId) {
+    public PurchasesResponseDTO listPurchases(@PathVariable UUID cardId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Purchase> purchases = purchaseService.findByCardId(userEmail, cardId);
+        PurchasesResponseDTO purchases = new PurchasesResponseDTO();
+        purchaseService.findByCardId(userEmail, cardId).forEach(purchase -> purchases.addPurchase(purchaseMapper.toDto(purchase)));
 
-        return purchaseMapper.toCollectionDto(purchases);
+        return purchases;
     }
 
-    @GetMapping("{cardId}/purchases/contestations")
+    @GetMapping("/{cardId}/purchases/contestations")
     @ResponseStatus(HttpStatus.OK)
-    public List<ContestationResponseDTO> listContestations(@PathVariable UUID cardId) {
+    public ContestationsResponseDTO listContestations(@PathVariable UUID cardId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Contestation> contestations = contestationService.findByCardId(userEmail, cardId);
+        ContestationsResponseDTO contestations = new ContestationsResponseDTO();
+        contestationService.findByCardId(userEmail, cardId).forEach(contestation -> contestations.addContestaton(contestationMapper.toDto(contestation)));
 
-        return contestationMapper.toCollectionDto(contestations);
+        return contestations;
     }
 }

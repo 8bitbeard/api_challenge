@@ -2,12 +2,10 @@ package br.com.itau.challenge.config;
 
 import br.com.itau.challenge.security.CustomAccessDeniedHandler;
 import br.com.itau.challenge.security.CustomAuthenticationEntryPoint;
-import br.com.itau.challenge.security.JwtAuthenticateFilter;
-import br.com.itau.challenge.security.JwtValidateFilter;
+import br.com.itau.challenge.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,11 +29,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Override
+
     @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -54,12 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthenticateFilter jwtAuthenticateFilter = new JwtAuthenticateFilter(authenticationManagerBean());
-        jwtAuthenticateFilter.setFilterProcessesUrl("/v1/auth/login");
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/v1/auth/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/v1/login").permitAll()
                 .antMatchers("/v1/users").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
@@ -69,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler())
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilter(jwtAuthenticateFilter).addFilter(new JwtValidateFilter(authenticationManagerBean()));
+                .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

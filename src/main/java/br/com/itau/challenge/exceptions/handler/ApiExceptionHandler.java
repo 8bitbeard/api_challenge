@@ -111,10 +111,10 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.CONFLICT)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ErrorResponseDTO handleUserNotFound(UserNotFoundException exception) {
         ErrorResponseDTO error = new ErrorResponseDTO();
-        error.setStatus(HttpStatus.CONFLICT.getReasonPhrase());
+        error.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
         error.setMessage(message("UserNotFoundException.message"));
 
         return error;
@@ -126,6 +126,26 @@ public class ApiExceptionHandler {
         ErrorResponseDTO error = new ErrorResponseDTO();
         error.setStatus(HttpStatus.CONFLICT.getReasonPhrase());
         error.setMessage(message("PurchaseAlreadyContestedException.message"));
+
+        return error;
+    }
+
+    @ExceptionHandler(AuthenticationFailedException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleAuthenticationFailed(AuthenticationFailedException exception) {
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        error.setMessage(message("AuthenticationFailedException.message"));
+
+        return error;
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+    public ErrorResponseDTO handleForbidden(ForbiddenException exception) {
+        ErrorResponseDTO error = new ErrorResponseDTO();
+        error.setStatus(HttpStatus.FORBIDDEN.getReasonPhrase());
+        error.setMessage(message("ForbiddenException.message"));
 
         return error;
     }

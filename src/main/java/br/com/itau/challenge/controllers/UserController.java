@@ -1,9 +1,9 @@
 package br.com.itau.challenge.controllers;
 
 import br.com.itau.challenge.dtos.request.UserRequestDTO;
-import br.com.itau.challenge.dtos.response.CardResponseDTO;
+import br.com.itau.challenge.dtos.response.CardsResponseDTO;
 import br.com.itau.challenge.dtos.response.UserResponseDTO;
-import br.com.itau.challenge.entities.Card;
+import br.com.itau.challenge.dtos.response.UsersResponseDTO;
 import br.com.itau.challenge.entities.User;
 import br.com.itau.challenge.mappers.CardMapper;
 import br.com.itau.challenge.mappers.UserMapper;
@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -32,9 +31,11 @@ public class UserController implements UserApi {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserResponseDTO> listUsers() {
-        List<User> users = userService.list();
-        return userMapper.toCollectionDto(users);
+    public UsersResponseDTO listUsers() {
+        UsersResponseDTO users = new UsersResponseDTO();
+        userService.list().forEach(user -> users.addUser(userMapper.toDto(user)));
+
+        return users;
     }
 
     @PostMapping
@@ -49,17 +50,19 @@ public class UserController implements UserApi {
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO sessionUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user = userService.find(email);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.find(userEmail);
 
         return userMapper.toDto(user);
     }
 
     @GetMapping("/{userId}/cards")
     @ResponseStatus(HttpStatus.OK)
-    public List<CardResponseDTO> listCards(@PathVariable UUID userId) {
-        List<Card> cards = cardService.listByUserId(userId);
-        return cardMapper.toCollectionDto(cards);
+    public CardsResponseDTO listCards(@PathVariable UUID userId) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        CardsResponseDTO cards = new CardsResponseDTO();
+        cardService.listByUserId(userEmail, userId).forEach(card -> cards.addCard(cardMapper.toDto(card)));
+
+        return cards;
     }
 }

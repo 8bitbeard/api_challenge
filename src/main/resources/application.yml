@@ -22,9 +22,9 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       group-id: group-id
 
-topic:
-  name:
-    producer: topico.comando.teste
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
 
 auto:
   create:
@@ -32,6 +32,9 @@ auto:
       enable: true
 
 itauchallenge:
+  jwt:
+    secret: 2068ed5b-c591-4fb1-b9a2-2ec47ab41bf4
+    expiration: 600000
   api-docs:
     apiName: Itau Challenge API
     description: API Developed for the Itau Backend Challenge

@@ -12,5 +12,5 @@ public class CardResponseDTO {
     private String number;
     private String code;
     private OffsetDateTime expirationDate;
-    private UserResponseDTO user;
+    private String userName;
 }

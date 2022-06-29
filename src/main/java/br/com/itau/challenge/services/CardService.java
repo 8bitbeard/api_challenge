@@ -2,7 +2,7 @@ package br.com.itau.challenge.services;
 
 import br.com.itau.challenge.entities.Card;
 import br.com.itau.challenge.entities.User;
-import br.com.itau.challenge.exceptions.UserAlreadyHaveCardException;
+import br.com.itau.challenge.exceptions.ForbiddenException;
 import br.com.itau.challenge.exceptions.UserDoesNotHaveCardException;
 import br.com.itau.challenge.exceptions.UserNotFoundException;
 import br.com.itau.challenge.repositories.CardRepository;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -50,7 +50,11 @@ public class CardService {
         return userCard;
     }
 
-    public List<Card> listByUserId(UUID userId) {
+    public List<Card> listByUserId(String userEmail, UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        if (!Objects.equals(user.getEmail(), userEmail)) {
+            throw new ForbiddenException();
+        }
 
         log.info("Listing all cards from user {} by id", userId);
 
