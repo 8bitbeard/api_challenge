@@ -1,7 +1,7 @@
 # Itau Challenge API
 
 Esta API foi desenvolvida em um desafio ténico para uma vaga de desenvolvedor Backend.
-A documentação dessa API pode ser acessada localmente (Após subir o servidor local da aplicação) através da URL: http://localhost:8080/swagger-ui/index.html, mas também pode ser acessada (E completamente testada) através da URL de produção: http://15.228.243.48:8080/swagger-ui/index.html.
+A documentação dessa API pode ser acessada localmente (Após subir o servidor local da aplicação) através da URL: http://localhost:8080/swagger-ui/index.html, mas também pode ser acessada (E completamente testada) através da URL de produção.
 
 # Tecnologias utilizadas
 - Java 11
@@ -54,4 +54,4 @@ Após isso, a aplicação string estará rodando localmente (`localhost`) na por
 O projeto inclui uma collection já pronta do Insomnia, caso queira utilizá-la, o arquivo está na pasta `/insomnia`
 
 # Utilizando a API em produção:
-Esse projeto foi deployado em uma instância do AWS EC2. Para interagir com a aplicação em produção, basta acessála na url: http://15.228.243.48:8080 (A collection inclusa no projeto já possui um environment de Produção)
+Esse projeto foi deployado em uma instância do AWS EC2. Para interagir com a aplicação em produção, basta acessála na url (A collection inclusa no projeto já possui um environment de Produção)
